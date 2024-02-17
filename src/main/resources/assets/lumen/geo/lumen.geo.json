@@ -1,0 +1,85 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.lumen_invasor",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 25, 0]
+				},
+				{
+					"name": "bone2",
+					"parent": "bone",
+					"pivot": [0, 16, 0]
+				},
+				{
+					"name": "head",
+					"parent": "bone2",
+					"pivot": [0, 34, 0],
+					"rotation": [5, 0, 0],
+					"cubes": [
+						{"origin": [-3, 34, -3], "size": [6, 14, 6], "uv": [0, 0]},
+						{"origin": [-3, 34, -3], "size": [6, 14, 6], "inflate": 0.35, "uv": [24, 0]},
+						{"origin": [-3.75, 42, -3], "size": [3, 2, 2], "inflate": 0.2, "uv": [118, 0]},
+						{"origin": [0.75, 42, -3], "size": [3, 2, 2], "inflate": 0.2, "uv": [118, 0], "mirror": true}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "bone2",
+					"pivot": [0, 27, 0],
+					"cubes": [
+						{"origin": [-3, 16, -2], "size": [6, 18, 4], "uv": [0, 20]},
+						{"origin": [-3, 16, -2], "size": [6, 18, 4], "inflate": 0.35, "uv": [20, 20]}
+					]
+				},
+				{
+					"name": "arm1",
+					"parent": "bone2",
+					"pivot": [-3, 32, 0],
+					"rotation": [0, 0, 5],
+					"cubes": [
+						{"origin": [-6, 13, -2], "size": [3, 21, 4], "uv": [48, 0]},
+						{"origin": [-6, 13, -2], "size": [3, 21, 4], "inflate": 0.35, "uv": [62, 0]}
+					]
+				},
+				{
+					"name": "arm2",
+					"parent": "bone2",
+					"pivot": [3, 32, 0],
+					"rotation": [0, 0, -5],
+					"cubes": [
+						{"origin": [3, 13, -2], "size": [3, 21, 4], "uv": [48, 25]},
+						{"origin": [3, 13, -2], "size": [3, 21, 4], "inflate": 0.35, "uv": [62, 25]}
+					]
+				},
+				{
+					"name": "leg1",
+					"parent": "bone",
+					"pivot": [-1.5, 16, 0],
+					"cubes": [
+						{"origin": [-3, 0, -1.5], "size": [3, 16, 3], "uv": [80, 0]},
+						{"origin": [-3, 0, -1.5], "size": [3, 16, 3], "inflate": 0.35, "uv": [92, 0]}
+					]
+				},
+				{
+					"name": "leg2",
+					"parent": "bone",
+					"pivot": [1.5, 16, 0],
+					"cubes": [
+						{"origin": [0, 0, -1.5], "size": [3, 16, 3], "uv": [80, 19]},
+						{"origin": [0, 0, -1.5], "size": [3, 16, 3], "inflate": 0.35, "uv": [92, 19]}
+					]
+				}
+			]
+		}
+	]
+}
