@@ -6,17 +6,21 @@ import com.mojang.math.Axis;
 import com.ren.lumen.client.model.entity.LumenModel;
 import com.ren.lumen.server.entity.LumenEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.example.client.renderer.entity.GremlinRenderer;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
+import software.bernie.geckolib.util.RenderUtils;
 
 public class LumenRenderer extends GeoEntityRenderer<LumenEntity> {
     protected ItemStack mainHandItem;
@@ -37,32 +41,41 @@ public class LumenRenderer extends GeoEntityRenderer<LumenEntity> {
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, LumenEntity animatable) {
-                return switch (bone.getName()) {
-                    case "arm2", "arm1" -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
-                    default -> ItemDisplayContext.NONE;
-                };
+            public void renderForBone(PoseStack poseStack, LumenEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+                ItemStack stack = getStackForBone(bone, animatable);
+                BlockState blockState = getBlockForBone(bone, animatable);
+
+                if (stack == null && blockState == null)
+                    return;
+
+                poseStack.pushPose();
+
+                //translate to pivot so we can rotate around itself
+                //then rotate so it looks good this is just try and error
+                //then we translate it to the end of the arm so it looks like it is holding it
+                RenderUtils.translateToPivotPoint(poseStack, bone);
+                poseStack.mulPose(Axis.XN.rotationDegrees(70));
+                poseStack.translate(-0.1f, -0.2f, -1.1f);
+
+
+
+                if (stack != null)
+                    renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+
+                if (blockState != null)
+                    renderBlockForBone(poseStack, bone, blockState, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+
+                buffer = bufferSource.getBuffer(renderType);
+
+                poseStack.popPose();
             }
 
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, LumenEntity animatable, MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
-                if (stack == LumenRenderer.this.mainHandItem) {
-                    poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                    poseStack.translate(0.05F, 0.10F, -1.15F);
-                    if (stack.getItem() instanceof ShieldItem) {
-                        poseStack.translate(0.0, 0.125, -0.25);
-                    }
-                } else if (stack == LumenRenderer.this.offhandItem) {
-                    poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                    poseStack.translate(0.0F, 0.45F, 0.0F);
-                    if (stack.getItem() instanceof ShieldItem) {
-                        poseStack.translate(0.0, 0.125, 0.25);
-                        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-                    }
-                }
-                super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, LumenEntity animatable) {
+                return ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
             }
         });
+
     }
 
     @Override
